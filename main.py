@@ -10,7 +10,7 @@ import traceback
 import requests
 
 
-def exists(site, path, timeout=10):
+def exists(site, path):
     """
     Check if a file exists at a given URL path.
 
@@ -21,8 +21,8 @@ def exists(site, path, timeout=10):
     Returns:
         bool: True if the file exists, False otherwise.
     """
-    response = requests.head(site + path, timeout=timeout)
-    return response.status_code == requests.codes["ok"]
+    r = requests.head(site + path)
+    return r.status_code == requests.codes.ok
 
 
 def check_file_exists(file_path, file_name, cycle, id_lists):
@@ -65,7 +65,7 @@ def create_folder(folder_name):
         os.makedirs(folder_name)
 
 
-def download_images(file_path, folder_name, id_lists, timeout=10):
+def download_images(file_path, folder_name, id_lists):
     """
     Download images from the specified URL path and save them in a folder with the given name.
 
@@ -78,13 +78,13 @@ def download_images(file_path, folder_name, id_lists, timeout=10):
         None
     """
     os.chdir(folder_name)
-    for image_id in id_lists:
-        response = requests.get(file_path + image_id, stream=True, timeout=timeout)
-        response.raw.decode_content = True
+    for x in id_lists:
+        r = requests.get(file_path + x, stream=True)
+        r.raw.decode_content = True
 
-        with open(image_id, "wb") as file_obj:
-            shutil.copyfileobj(response.raw, file_obj)
-        print(image_id + " - Saved successfully!")
+        with open(x, "wb") as f:
+            shutil.copyfileobj(r.raw, f)
+        print(x + " - Saved successfully!")
 
 
 def main():
