@@ -17,18 +17,26 @@ def check_file_exists(
     Checks if the specified images exist on the server and returns a list of their IDs.
     """
     print("Searching for files...")
+
     found_files = True
+
     for i in range(1, num_images + 1):
         file_url = site_url + file_name_format % i
         r = requests.head(file_url)
+
         if r.status_code == requests.codes.ok:
             ids = file_name_format % i
             id_lists.append(ids)
-            print(f"File exists: {file_name_format % i}")
+            print(f"File found: {file_name_format % i}")
         else:
-            print(f"File does not exist: {file_name_format % i}")
+            print(f"File not found: {file_name_format % i}")
             found_files = False
             break  # Stop searching if the file doesn't exist
+
+    if found_files:
+        print("All files found on server")
+    else:
+        print("Could not find all files on server")
 
     return found_files
 
@@ -38,6 +46,9 @@ def download_images(site_url: str, folder_name: str, id_lists: list) -> None:
     Downloads the specified images to the specified folder.
     """
     os.chdir(folder_name)
+
+    print("Downloading images...")
+
     for id in id_lists:
         file_url = site_url + id
         r = requests.get(file_url, stream=True)
@@ -45,7 +56,8 @@ def download_images(site_url: str, folder_name: str, id_lists: list) -> None:
 
         with open(id, "wb") as f:
             shutil.copyfileobj(r.raw, f)
-        print(f"{id} - Saved successfully!")
+
+        print(f"{id} - Downloaded successfully!")
 
 
 def main() -> None:
