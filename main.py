@@ -24,6 +24,7 @@ def check_file_exists(site_url: str, file_name_format: str, num_images: int, id_
             print(f"File exists: {file_name_format % i}")
         else:
             print(f"File does not exist: {file_name_format % i}")
+            break # Stop searching if the file doesn't exist
     
     return len(id_lists) > 0
 
