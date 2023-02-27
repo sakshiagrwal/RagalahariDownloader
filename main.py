@@ -10,7 +10,9 @@ import traceback
 import requests
 
 
-def check_file_exists(site_url: str, file_name_format: str, num_images: int, id_lists: list) -> bool:
+def check_file_exists(
+    site_url: str, file_name_format: str, num_images: int, id_lists: list
+) -> bool:
     """
     Checks if the specified images exist on the server and returns a list of their IDs.
     """
@@ -26,8 +28,8 @@ def check_file_exists(site_url: str, file_name_format: str, num_images: int, id_
         else:
             print(f"File does not exist: {file_name_format % i}")
             found_files = False
-            break # Stop searching if the file doesn't exist
-    
+            break  # Stop searching if the file doesn't exist
+
     return found_files
 
 
@@ -54,24 +56,31 @@ def main() -> None:
 
         # Re-ask the user until valid file names are entered
         while True:
-            file_name_format = input("Enter the file name format (e.g. image-%d.jpg): ")
             if "%d" in file_name_format:
-                break
+                if check_file_exists(site_url, file_name_format, 100, []):
+                    break
+                else:
+                    file_name_format = input(
+                        "No files found. Enter a valid file name format: "
+                    )
             else:
-                print("Invalid file name format. Please include '%d' in the format.")
-
-        # Initialize id_lists
-        id_lists = []
+                file_name_format = input(
+                    "Invalid file name format. Please include '%d' in the format: "
+                )
 
         # Prompt for folder name and number of images to download
         folder_name = input("Enter the folder name: ")
-        num_images = int(input("How many images do you want to download? (Default: 100): ") or 100)
+        num_images = int(
+            input("How many images do you want to download? (Default: 100): ") or 100
+        )
 
         # Create folder if it does not exist
         if not os.path.exists(folder_name):
             os.makedirs(folder_name)
 
         # Download the images
+        id_lists = []
+        check_file_exists(site_url, file_name_format, num_images, id_lists)
         download_images(site_url, folder_name, id_lists[:num_images])
 
     except KeyboardInterrupt:
