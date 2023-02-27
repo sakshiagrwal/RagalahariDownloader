@@ -42,6 +42,12 @@ def main():
         # Getting user inputs
         file_path = input("Enter the URL path of the images: ")
         file_name = input("Enter the file name: ")
+
+        # Re-ask the user until a valid file name is entered
+        while "%d" not in file_name:
+            print("File name should contain '%d' to indicate number sequence")
+            file_name = input("Enter the file name: ")
+
         folder_name = input("Enter the folder name: ").title()
         cycle = (
             int(
