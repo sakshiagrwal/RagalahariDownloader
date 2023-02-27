@@ -60,7 +60,8 @@ def main() -> None:
         # Re-ask the user until valid file names are entered
         while True:
             if "%d" in file_name_format:
-                if check_file_exists(site_url, file_name_format, num_images, []):
+                id_lists = []
+                if check_file_exists(site_url, file_name_format, num_images, id_lists):
                     break
                 else:
                     file_name_format = input(
@@ -79,8 +80,6 @@ def main() -> None:
             os.makedirs(folder_name)
 
         # Download the images
-        id_lists = []
-        check_file_exists(site_url, file_name_format, num_images, id_lists)
         download_images(site_url, folder_name, id_lists[:num_images])
 
     except KeyboardInterrupt:
