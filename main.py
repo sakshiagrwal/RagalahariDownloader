@@ -71,7 +71,7 @@ def main() -> None:
         # Prompt for folder name and number of images to download
         folder_name = input("Enter the folder name: ")
         num_images = int(
-            input("How many images do you want to download? (Default: 100): ") or 100
+            input("How many images do you want to download? (Default: 10): ") or 10
         )
 
         # Create folder if it does not exist
