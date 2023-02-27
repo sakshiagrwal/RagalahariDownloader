@@ -23,11 +23,7 @@ def check_file_exists(file_path, file_name, cycle, id_lists):
         else:
             print("File not exist: " + file_name % i)
             i += 1
-
-
-def create_folder(folder_name):
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
+    return len(id_lists) > 0
 
 
 def download_images(file_path, folder_name, id_lists):
@@ -56,14 +52,16 @@ def main():
         )
         id_lists = []
 
-        # Creating folder if it does not exist
-        create_folder(folder_name)
-
         # Checking if the file exists
-        check_file_exists(file_path, file_name, cycle, id_lists)
+        if check_file_exists(file_path, file_name, cycle, id_lists):
+            # Creating folder if it does not exist
+            if not os.path.exists(folder_name):
+                os.makedirs(folder_name)
 
-        # Downloading the images
-        download_images(file_path, folder_name, id_lists)
+            # Downloading the images
+            download_images(file_path, folder_name, id_lists)
+        else:
+            print("No files found for download.")
 
     except KeyboardInterrupt:
         print("\nShutdown requested. Exiting...")
