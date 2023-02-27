@@ -3,7 +3,7 @@ import os.path
 import shutil
 import requests
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 
 def exists(site, path):
     r = requests.head(site + path)
@@ -37,6 +37,7 @@ class App(tk.Tk):
         super().__init__()
 
         self.title("Image Downloader")
+        self.geometry("400x200") # set window size
 
         # Create widgets
         self.file_path_label = tk.Label(self, text="URL path:")
@@ -49,6 +50,10 @@ class App(tk.Tk):
         self.cycle_entry = tk.Entry(self)
         self.download_button = tk.Button(self, text="Download", command=self.download)
 
+        # Add progress bar
+        self.progress = tk.DoubleVar()
+        self.progress_bar = tk.ttk.Progressbar(self, variable=self.progress, maximum=100)
+
         # Pack widgets
         self.file_path_label.pack()
         self.file_path_entry.pack()
@@ -59,6 +64,7 @@ class App(tk.Tk):
         self.cycle_label.pack()
         self.cycle_entry.pack()
         self.download_button.pack()
+        self.progress_bar.pack(fill='x')
 
     def download(self):
         try:
@@ -76,7 +82,18 @@ class App(tk.Tk):
                     os.makedirs(folder_name)
 
                 # Download images
-                download_images(file_path, folder_name, id_lists)
+                self.progress.set(0)
+                increment = 100 / len(id_lists)
+                count = 0
+                for x in id_lists:
+                    r = requests.get(file_path + x, stream=True)
+                    r.raw.decode_content = True
+
+                    with open(x, "wb") as f:
+                        shutil.copyfileobj(r.raw, f)
+
+                    count += 1
+                    self.progress.set(count * increment)
 
                 # Show success message
                 messagebox.showinfo("Success", "Images downloaded successfully!")
