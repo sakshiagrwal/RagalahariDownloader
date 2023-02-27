@@ -67,9 +67,14 @@ def main() -> None:
         # Getting user inputs
         site_url = input("\033[94mEnter the URL path of the images: \033[0m")
         num_images = int(
-            input("\033[94mHow many images do you want to download? (Default: 10): \033[0m") or 10
+            input(
+                "\033[94mHow many images do you want to download? (Default: 10): \033[0m"
+            )
+            or 10
         )
-        file_name_format = input("\033[94mEnter the file name format (e.g. image-%d.jpg): \033[0m")
+        file_name_format = input(
+            "\033[94mEnter the file name format (e.g. image-%d.jpg): \033[0m"
+        )
 
         # Re-ask the user until valid file names are entered
         while True:
@@ -79,7 +84,7 @@ def main() -> None:
                     break
                 else:
                     file_name_format = input(
-                        "\033[91mNo files found. Enter a valid file name format:\033[0m "
+                        "\033[91mEnter a valid file name format:\033[0m "
                     )
             else:
                 file_name_format = input(
