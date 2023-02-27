@@ -6,7 +6,6 @@ import os
 import os.path
 import shutil
 import sys
-import traceback
 import requests
 
 
@@ -22,9 +21,9 @@ def check_file_exists(
 
     for i in range(1, num_images + 1):
         file_url = site_url + file_name_format % i
-        r = requests.head(file_url)
+        response = requests.head(file_url, timeout=10)
 
-        if r.status_code == requests.codes.ok:
+        if response.status_code == requests.codes["OK"]:
             ids = file_name_format % i
             id_lists.append(ids)
             print(f"File found: {file_name_format % i}")
@@ -49,18 +48,21 @@ def download_images(site_url: str, folder_name: str, id_lists: list) -> None:
 
     print("Downloading images...")
 
-    for id in id_lists:
-        file_url = site_url + id
-        r = requests.get(file_url, stream=True)
-        r.raw.decode_content = True
+    for image_id in id_lists:
+        file_url = site_url + image_id
+        response = requests.get(file_url, stream=True, timeout=10)
+        response.raw.decode_content = True
 
-        with open(id, "wb") as f:
-            shutil.copyfileobj(r.raw, f)
+        with open(image_id, "wb") as file:
+            shutil.copyfileobj(response.raw, file)
 
-        print(f"{id} - Downloaded successfully!")
+        print(f"{image_id} - Downloaded successfully!")
 
 
 def main() -> None:
+    """
+    Main function to handle user input and download the images.
+    """
     try:
         # Getting user inputs
         site_url = input("Enter the URL path of the images: ")
@@ -96,9 +98,9 @@ def main() -> None:
 
     except KeyboardInterrupt:
         print("\nShutdown requested. Exiting...")
-    except Exception:
-        traceback.print_exc(file=sys.stdout)
-    sys.exit(0)
+    except requests.exceptions.Timeout:
+        print("Request timed out. Exiting...")
+    sys.exit(1)
 
 
 if __name__ == "__main__":
