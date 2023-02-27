@@ -1,3 +1,7 @@
+"""
+Ragalahari Downloader
+"""
+
 import os
 import os.path
 import shutil
@@ -6,66 +10,62 @@ import traceback
 import requests
 
 
-def exists(site, path):
-    r = requests.head(site + path)
-    return r.status_code == requests.codes.ok
-
-
-def check_file_exists(file_path, file_name, cycle, id_lists):
-    i = 1
-    print("Searching files...")
-    while i < cycle:
-        if exists(file_path, file_name % i):
-            ids = file_name % i
+def check_file_exists(site_url: str, file_name_format: str, num_images: int, id_lists: list) -> bool:
+    """
+    Checks if the specified images exist on the server and returns a list of their IDs.
+    """
+    print("Searching for files...")
+    for i in range(1, num_images + 1):
+        file_url = site_url + file_name_format % i
+        r = requests.head(file_url)
+        if r.status_code == requests.codes.ok:
+            ids = file_name_format % i
             id_lists.append(ids)
-            print("File exists: " + file_name % i)
-            i += 1
+            print(f"File exists: {file_name_format % i}")
         else:
-            print("File not exist: " + file_name % i)
-            i += 1
+            print(f"File does not exist: {file_name_format % i}")
+    
     return len(id_lists) > 0
 
 
-def download_images(file_path, folder_name, id_lists):
+def download_images(site_url: str, folder_name: str, id_lists: list) -> None:
+    """
+    Downloads the specified images to the specified folder.
+    """
     os.chdir(folder_name)
-    for x in id_lists:
-        r = requests.get(file_path + x, stream=True)
+    for id in id_lists:
+        file_url = site_url + id
+        r = requests.get(file_url, stream=True)
         r.raw.decode_content = True
 
-        with open(x, "wb") as f:
+        with open(id, "wb") as f:
             shutil.copyfileobj(r.raw, f)
-        print(x + " - Saved successfully!")
+        print(f"{id} - Saved successfully!")
 
 
-def main():
+def main() -> None:
     try:
         # Getting user inputs
-        file_path = input("Enter the URL path of the images: ")
-        file_name = input("Enter the file name: ")
+        site_url = input("Enter the URL path of the images: ")
+        file_name_format = input("Enter the file name format (e.g. image-%d.jpg): ")
 
-        # Re-ask the user until a valid file name is entered
-        while "%d" not in file_name:
-            print("File name should contain '%d' to indicate number sequence")
-            file_name = input("Enter the file name: ")
+        # Re-ask the user until a valid file name format is entered
+        while "%d" not in file_name_format:
+            print("File name format should contain '%d' to indicate number sequence.")
+            file_name_format = input("Enter the file name format: ")
 
         folder_name = input("Enter the folder name: ").title()
-        cycle = (
-            int(
-                input("How many images do you want to download? (Default: 100): ")
-                or 100
-            )
-            + 1
-        )
+        num_images = int(input("How many images do you want to download? (Default: 100): ") or 100)
         id_lists = []
 
-        # Checking if the file exists
-        if check_file_exists(file_path, file_name, cycle, id_lists):
+        # Checking if the files exist
+        if check_file_exists(site_url, file_name_format, num_images, id_lists):
             # Creating folder if it does not exist
             if not os.path.exists(folder_name):
                 os.makedirs(folder_name)
 
             # Downloading the images
-            download_images(file_path, folder_name, id_lists)
+            download_images(site_url, folder_name, id_lists)
         else:
             print("No files found for download.")
 
