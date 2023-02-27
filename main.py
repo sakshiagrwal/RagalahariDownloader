@@ -49,6 +49,10 @@ def download_images(site_url: str, folder_name: str, id_lists: list) -> None:
     print("\033[93mDownloading images...\033[0m")
 
     for image_id in id_lists:
+        if os.path.exists(image_id):
+            print(f"\033[93m{image_id} already exists, skipping...\033[0m")
+            continue
+
         file_url = site_url + image_id
         response = requests.get(file_url, stream=True, timeout=10)
         response.raw.decode_content = True
