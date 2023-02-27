@@ -52,12 +52,15 @@ def main() -> None:
     try:
         # Getting user inputs
         site_url = input("Enter the URL path of the images: ")
+        num_images = int(
+            input("How many images do you want to download? (Default: 10): ") or 10
+        )
         file_name_format = input("Enter the file name format (e.g. image-%d.jpg): ")
 
         # Re-ask the user until valid file names are entered
         while True:
             if "%d" in file_name_format:
-                if check_file_exists(site_url, file_name_format, 100, []):
+                if check_file_exists(site_url, file_name_format, num_images, []):
                     break
                 else:
                     file_name_format = input(
@@ -68,11 +71,8 @@ def main() -> None:
                     "Invalid file name format. Please include '%d' in the format: "
                 )
 
-        # Prompt for folder name and number of images to download
+        # Prompt for folder name
         folder_name = input("Enter the folder name: ")
-        num_images = int(
-            input("How many images do you want to download? (Default: 10): ") or 10
-        )
 
         # Create folder if it does not exist
         if not os.path.exists(folder_name):
