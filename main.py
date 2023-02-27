@@ -1,12 +1,9 @@
 import os
 import os.path
 import shutil
-import sys
-import traceback
 import requests
 import tkinter as tk
-from tkinter import filedialog, messagebox
-
+from tkinter import messagebox
 
 def exists(site, path):
     r = requests.head(site + path)
