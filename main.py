@@ -4,6 +4,8 @@ import shutil
 import sys
 import traceback
 import requests
+import tkinter as tk
+from tkinter import filedialog, messagebox
 
 
 def exists(site, path):
@@ -13,15 +15,12 @@ def exists(site, path):
 
 def check_file_exists(file_path, file_name, cycle, id_lists):
     i = 1
-    print("Searching files...")
     while i < cycle:
         if exists(file_path, file_name % i):
             ids = file_name % i
             id_lists.append(ids)
-            print("File exists: " + file_name % i)
             i += 1
         else:
-            print("File not exist: " + file_name % i)
             i += 1
     return len(id_lists) > 0
 
@@ -34,47 +33,62 @@ def download_images(file_path, folder_name, id_lists):
 
         with open(x, "wb") as f:
             shutil.copyfileobj(r.raw, f)
-        print(x + " - Saved successfully!")
 
 
-def main():
-    try:
-        # Getting user inputs
-        file_path = input("Enter the URL path of the images: ")
-        file_name = input("Enter the file name: ")
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
 
-        # Re-ask the user until a valid file name is entered
-        while "%d" not in file_name:
-            print("File name should contain '%d' to indicate number sequence")
-            file_name = input("Enter the file name: ")
+        self.title("Image Downloader")
 
-        folder_name = input("Enter the folder name: ").title()
-        cycle = (
-            int(
-                input("How many images do you want to download? (Default: 100): ")
-                or 100
-            )
-            + 1
-        )
-        id_lists = []
+        # Create widgets
+        self.file_path_label = tk.Label(self, text="URL path:")
+        self.file_path_entry = tk.Entry(self)
+        self.file_name_label = tk.Label(self, text="File name:")
+        self.file_name_entry = tk.Entry(self)
+        self.folder_name_label = tk.Label(self, text="Folder name:")
+        self.folder_name_entry = tk.Entry(self)
+        self.cycle_label = tk.Label(self, text="Number of images:")
+        self.cycle_entry = tk.Entry(self)
+        self.download_button = tk.Button(self, text="Download", command=self.download)
 
-        # Checking if the file exists
-        if check_file_exists(file_path, file_name, cycle, id_lists):
-            # Creating folder if it does not exist
-            if not os.path.exists(folder_name):
-                os.makedirs(folder_name)
+        # Pack widgets
+        self.file_path_label.pack()
+        self.file_path_entry.pack()
+        self.file_name_label.pack()
+        self.file_name_entry.pack()
+        self.folder_name_label.pack()
+        self.folder_name_entry.pack()
+        self.cycle_label.pack()
+        self.cycle_entry.pack()
+        self.download_button.pack()
 
-            # Downloading the images
-            download_images(file_path, folder_name, id_lists)
-        else:
-            print("No files found for download.")
+    def download(self):
+        try:
+            # Get input values
+            file_path = self.file_path_entry.get()
+            file_name = self.file_name_entry.get()
+            folder_name = self.folder_name_entry.get().title()
+            cycle = int(self.cycle_entry.get() or 100) + 1
+            id_lists = []
 
-    except KeyboardInterrupt:
-        print("\nShutdown requested. Exiting...")
-    except Exception:
-        traceback.print_exc(file=sys.stdout)
-    sys.exit(0)
+            # Check if files exist
+            if check_file_exists(file_path, file_name, cycle, id_lists):
+                # Create folder if it doesn't exist
+                if not os.path.exists(folder_name):
+                    os.makedirs(folder_name)
+
+                # Download images
+                download_images(file_path, folder_name, id_lists)
+
+                # Show success message
+                messagebox.showinfo("Success", "Images downloaded successfully!")
+            else:
+                messagebox.showerror("Error", "No files found for download.")
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
 
 if __name__ == "__main__":
-    main()
+    app = App()
+    app.mainloop()
