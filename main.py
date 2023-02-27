@@ -54,18 +54,19 @@ def main() -> None:
             print("File name format should contain '%d' to indicate number sequence.")
             file_name_format = input("Enter the file name format: ")
 
-        folder_name = input("Enter the folder name: ").title()
-        num_images = int(input("How many images do you want to download? (Default: 100): ") or 100)
+        # Check if files exist
         id_lists = []
+        if check_file_exists(site_url, file_name_format, 100, id_lists):
+            # Prompt for folder name and number of images to download
+            folder_name = input("Enter the folder name: ")
+            num_images = int(input("How many images do you want to download? (Default: 100): ") or 100)
 
-        # Checking if the files exist
-        if check_file_exists(site_url, file_name_format, num_images, id_lists):
-            # Creating folder if it does not exist
+            # Create folder if it does not exist
             if not os.path.exists(folder_name):
                 os.makedirs(folder_name)
 
-            # Downloading the images
-            download_images(site_url, folder_name, id_lists)
+            # Download the images
+            download_images(site_url, folder_name, id_lists[:num_images])
         else:
             print("No files found for download.")
 
