@@ -15,6 +15,7 @@ def check_file_exists(site_url: str, file_name_format: str, num_images: int, id_
     Checks if the specified images exist on the server and returns a list of their IDs.
     """
     print("Searching for files...")
+    found_files = True
     for i in range(1, num_images + 1):
         file_url = site_url + file_name_format % i
         r = requests.head(file_url)
@@ -24,9 +25,10 @@ def check_file_exists(site_url: str, file_name_format: str, num_images: int, id_
             print(f"File exists: {file_name_format % i}")
         else:
             print(f"File does not exist: {file_name_format % i}")
+            found_files = False
             break # Stop searching if the file doesn't exist
     
-    return len(id_lists) > 0
+    return found_files
 
 
 def download_images(site_url: str, folder_name: str, id_lists: list) -> None:
@@ -50,26 +52,27 @@ def main() -> None:
         site_url = input("Enter the URL path of the images: ")
         file_name_format = input("Enter the file name format (e.g. image-%d.jpg): ")
 
-        # Re-ask the user until a valid file name format is entered
-        while "%d" not in file_name_format:
-            print("File name format should contain '%d' to indicate number sequence.")
-            file_name_format = input("Enter the file name format: ")
+        # Re-ask the user until valid file names are entered
+        while True:
+            file_name_format = input("Enter the file name format (e.g. image-%d.jpg): ")
+            if "%d" in file_name_format:
+                break
+            else:
+                print("Invalid file name format. Please include '%d' in the format.")
 
-        # Check if files exist
+        # Initialize id_lists
         id_lists = []
-        if check_file_exists(site_url, file_name_format, 100, id_lists):
-            # Prompt for folder name and number of images to download
-            folder_name = input("Enter the folder name: ")
-            num_images = int(input("How many images do you want to download? (Default: 100): ") or 100)
 
-            # Create folder if it does not exist
-            if not os.path.exists(folder_name):
-                os.makedirs(folder_name)
+        # Prompt for folder name and number of images to download
+        folder_name = input("Enter the folder name: ")
+        num_images = int(input("How many images do you want to download? (Default: 100): ") or 100)
 
-            # Download the images
-            download_images(site_url, folder_name, id_lists[:num_images])
-        else:
-            print("No files found for download.")
+        # Create folder if it does not exist
+        if not os.path.exists(folder_name):
+            os.makedirs(folder_name)
+
+        # Download the images
+        download_images(site_url, folder_name, id_lists[:num_images])
 
     except KeyboardInterrupt:
         print("\nShutdown requested. Exiting...")
