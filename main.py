@@ -63,17 +63,20 @@ def main():
         # Getting user inputs
         site_url = (
             input(
-                "Enter the URL path of the images (default: http://localhost/images/): "
+                "Enter the URL path of the images (default: https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/): "
             ).strip()
-            or "http://localhost/images/"
+            or "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
         )
         num_images = int(
-            input("How many images do you want to download? (default: 10): ").strip()
-            or 10
+            input("How many images do you want to download? (default: 4): ").strip()
+            or 4
         )
-        file_name_format = input(
-            "Enter the file name format (e.g. image-%d.jpg): "
-        ).strip()
+        file_name_format = (
+            input(
+                "Enter the file name format (default: kiara-advani-vvr-interview%d.jpg): "
+            ).strip()
+            or "kiara-advani-vvr-interview%d.jpg"
+        )
 
         # Re-ask the user until valid file names are entered
         while True:
