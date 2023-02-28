@@ -32,9 +32,9 @@ def check_files_exist(site_url, file_name_format, num_images):
         if response.status_code == requests.codes["OK"]:
             image_id = file_name_format % i
             id_list.append(image_id)
-            print(f"{Fore.GREEN}File found: {image_id}{Style.RESET_ALL}")
+            print(f"{Fore.GREEN}File found:{Style.RESET_ALL} {image_id}")
         else:
-            print(f"{Fore.RED}File not found: {file_name_format % i}{Style.RESET_ALL}")
+            print(f"{Fore.RED}File not found:{Style.RESET_ALL} {file_name_format % i}")
             return None
 
     print(f"{Fore.GREEN}All files found on server{Style.RESET_ALL}")
@@ -48,11 +48,11 @@ def download_images(site_url, folder_name, id_list):
     os.chdir(folder_name)
     current_dir = os.getcwd()
 
-    print(f"{Fore.BLUE}Downloading images to {current_dir}...{Style.RESET_ALL}")
+    print(f"{Fore.BLUE}Downloading images to{Style.RESET_ALL} {current_dir}")
 
     for image_id in id_list:
         if os.path.exists(image_id):
-            print(f"{Fore.YELLOW}{image_id} already exists, skipping...{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}{image_id}{Style.RESET_ALL} already exists, skipping")
             continue
 
         file_url = site_url + image_id
