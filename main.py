@@ -16,13 +16,17 @@ DEFAULT_URL_PATH = (
 DEFAULT_NUM_IMAGES = 4
 DEFAULT_FILE_NAME_FORMAT = "kiara-advani-vvr-interview%d.jpg"
 DEFAULT_FOLDER_NAME = "kiara"
+SEPARATOR = "-" * 50
 
 
 def check_files_exist(site_url, file_name_format, num_images):
     """
     Checks if the specified images exist on the server and returns a list of their IDs.
     """
+    print(" ")
+    print(SEPARATOR)
     print(f"{Fore.BLUE}Searching for files...{Style.RESET_ALL}")
+    print(SEPARATOR)
 
     id_list = []
     for i in range(1, num_images + 1):
@@ -38,6 +42,8 @@ def check_files_exist(site_url, file_name_format, num_images):
             return None
 
     print(f"{Fore.GREEN}All files found on server{Style.RESET_ALL}")
+    print(" ")
+    print(SEPARATOR)
     return id_list
 
 
@@ -48,6 +54,8 @@ def download_images(site_url, folder_name, id_list):
     os.chdir(folder_name)
     current_dir = os.getcwd()
 
+    print(SEPARATOR)
+    print(" ")
     print(f"{Fore.BLUE}Downloading images to{Style.RESET_ALL} {current_dir}")
 
     for image_id in id_list:
@@ -132,7 +140,10 @@ def main():
             os.makedirs(folder_name)
 
         download_images(site_url, folder_name, id_list[:num_images])
+        print(" ")
+        print(SEPARATOR)
         print(f"{Fore.GREEN}Download complete!{Style.RESET_ALL}")
+        print(SEPARATOR)
 
     except KeyboardInterrupt:
         print(f"\n{Fore.YELLOW}Shutdown requested. Exiting...{Style.RESET_ALL}")
