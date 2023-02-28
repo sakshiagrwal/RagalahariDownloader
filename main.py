@@ -91,13 +91,27 @@ def main():
     """
     try:
         # Getting user inputs
-        site_url = (
-            input(
-                f"{Fore.CYAN}Enter the URL path of the images{Style.RESET_ALL} "
-                f"(default: {DEFAULT_URL_PATH}): "
-            ).strip()
-            or DEFAULT_URL_PATH
-        )
+        while True:
+            site_url = (
+                input(
+                    f"{Fore.CYAN}Enter the URL path of the images{Style.RESET_ALL} "
+                    f"(default: {DEFAULT_URL_PATH}): "
+                ).strip()
+                or DEFAULT_URL_PATH
+            )
+
+            if not site_url.startswith("https://"):
+                print(
+                    f"{Fore.RED}Invalid URL. Please enter a URL that starts "
+                    f"with 'https://' .{Style.RESET_ALL}"
+                )
+            elif not site_url.endswith("/"):
+                print(
+                    f"{Fore.RED}Invalid URL. Please enter a URL that ends "
+                    f"with a forward slash (/).{Style.RESET_ALL}"
+                )
+            else:
+                break
 
         while True:
             try:
