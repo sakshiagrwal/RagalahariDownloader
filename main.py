@@ -25,7 +25,9 @@ def check_files_exist(site_url, file_name_format, num_images):
     """
     print(" ")
     print(SEPARATOR)
-    print(f"{Fore.BLUE}Searching all {num_images} image files on the server.{Style.RESET_ALL}")
+    print(
+        f"{Fore.BLUE}Searching all {num_images} image files on the server.{Style.RESET_ALL}"
+    )
     print(SEPARATOR)
 
     id_list = []
@@ -39,12 +41,16 @@ def check_files_exist(site_url, file_name_format, num_images):
             print(f"{Fore.GREEN}Image file {i} found:{Style.RESET_ALL} {image_id}")
         else:
             image_id = file_name_format % i
-            print(f"{Fore.YELLOW}Image file {i} not found on server:{Style.RESET_ALL} {image_id}")
+            print(
+                f"{Fore.YELLOW}Image file {i} not found on server:{Style.RESET_ALL} {image_id}"
+            )
 
     if len(id_list) == 0:
         return None
 
-    print(f"{Fore.GREEN}All {len(id_list)} image files checked on the server.{Style.RESET_ALL}")
+    print(
+        f"{Fore.GREEN}All {len(id_list)} image files checked on the server.{Style.RESET_ALL}"
+    )
     print(" ")
     return id_list
 
