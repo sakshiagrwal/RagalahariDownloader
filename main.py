@@ -1,92 +1,89 @@
-"""
-Ragalahari Downloader
-"""
-
 import os
-from urllib.parse import urljoin
-from concurrent.futures import ThreadPoolExecutor
+import os.path
+import shutil
+import sys
 import requests
-from bs4 import BeautifulSoup
 
-# Input URL
-url = input("Enter the url of the page you want to download images from: ")
 
-# Create a session object
-session = requests.Session()
+def check_file_exists(site_url: str, file_name_format: str, num_images: int, id_lists: list) -> bool:
+    print("\033[93mSearching for files...\033[0m")
 
-# Make a request to the URL using the session object
-response = session.get(url)
+    found_files = True
 
-# Parse the HTML content using html5lib parser
-soup = BeautifulSoup(response.content, "html5lib")
+    for i in range(1, num_images + 1):
+        file_url = site_url + file_name_format % i
+        response = requests.head(file_url, timeout=10)
 
-# Find all the links that point to images
-image_links = []
-for a in soup.find_all("a"):
-    if a.find("img"):
-        href = a.get("href")
-        if href.endswith(".aspx"):
-            image_links.append(urljoin(url, href))
-
-# Create a folder to store the images
-folder_name = os.path.basename(url).replace(".aspx", "")
-if not os.path.exists(folder_name):
-    os.makedirs(folder_name)
-
-# Download all the images using a thread pool
-def download_image(img_url):
-    """Download an image from a URL and save it to a folder.
-
-    Args:
-        img_url (Any): The URL of the image to download.
-
-    Returns:
-        None: This function doesn't return anything, but it saves the downloaded image to a folder.
-
-    Raises:
-        Exception: If there's an error downloading or saving the image.
-    """
-    try:
-        # Get the filename of the image
-        filename = os.path.basename(img_url).replace(".aspx", ".jpg")
-
-        # Check if the image has already been downloaded
-        filepath = os.path.join(folder_name, filename)
-        if os.path.exists(filepath):
-            print(f"{filename} already exists")
-            return
-
-        # Check if the folder name is in the image URL
-        if folder_name in img_url:
-            # Download the image
-            img_response = session.get(img_url)
-
-            # Parse the HTML content to get the actual image URL
-            img_soup = BeautifulSoup(img_response.content, "html.parser")
-            img_tag = img_soup.find("img", {"data-srcset": True})
-            if img_tag:
-                actual_img_url = (
-                    img_tag["data-srcset"]
-                    .split(",")[-1]
-                    .split(" ")[0]
-                    .replace(
-                        "https://szcdn.ragalahari.com",
-                        "https://starzone.ragalahari.com",
-                    )
-                )
-
-                # Save the image to the folder
-                with open(filepath, "wb") as handler:
-                    handler.write(session.get(actual_img_url).content)
-
-                print(f"Downloaded {filename} from '{actual_img_url}'")
-            else:
-                print(f"No image found at {img_url}")
+        if response.status_code == requests.codes["OK"]:
+            ids = file_name_format % i
+            id_lists.append(ids)
+            print(f"\033[92mFile found:\033[0m {file_name_format % i}")
         else:
-            return
-    except requests.exceptions.RequestException as err:
-        print(f"Error downloading {img_url}: {err}")
+            print(f"\033[91mFile not found:\033[0m {file_name_format % i}")
+            found_files = False
+            break  # Stop searching if the file doesn't exist
+
+    if found_files:
+        print("\033[92mAll files found on server\033[0m")
+    else:
+        print("\033[91mCould not find all files on server\033[0m")
+
+    return found_files
 
 
-with ThreadPoolExecutor(max_workers=8) as executor:
-    executor.map(download_image, image_links)
+def download_images(site_url: str, folder_name: str, id_lists: list) -> None:
+    os.chdir(folder_name)
+
+    print("\033[93mDownloading images...\033[0m")
+
+    for image_id in id_lists:
+        if os.path.exists(image_id):
+            print(f"\033[93m{image_id} already exists, skipping...\033[0m")
+            continue
+
+        file_url = site_url + image_id
+        response = requests.get(file_url, stream=True, timeout=10)
+        response.raw.decode_content = True
+
+        with open(image_id, "wb") as file:
+            shutil.copyfileobj(response.raw, file)
+
+        print(f"\033[92m{image_id} - Downloaded successfully!\033[0m")
+
+
+def main() -> None:
+    try:
+        # Getting user inputs
+        site_url = input("\033[94mEnter the URL path of the images: \033[0m")
+        num_images = int(input("\033[94mHow many images do you want to download? (Default: 10): \033[0m")or 10)
+        file_name_format = input("\033[94mEnter the file name format (e.g. image-%d.jpg): \033[0m")
+
+        # Re-ask the user until valid file names are entered
+        while True:
+            if "%d" in file_name_format:
+                id_lists = []
+                if check_file_exists(site_url, file_name_format, num_images, id_lists):
+                    break
+                else:
+                    file_name_format = input("\033[91mEnter a valid file name format:\033[0m ")
+            else:
+                file_name_format = input("\033[91mInvalid file name format. Please include '%d' in the format:\033[0m ")
+
+        # Prompt for folder name
+        folder_name = input("\033[94mEnter the folder name: \033[0m")
+
+        # Create folder if it does not exist
+        if not os.path.exists(folder_name):
+            os.makedirs(folder_name)
+
+        # Download the images
+        download_images(site_url, folder_name, id_lists[:num_images])
+
+    except KeyboardInterrupt:
+        print("\n\033[91mShutdown requested. Exiting...\033[0m")
+    except requests.exceptions.Timeout:
+        print("\033[91mRequest timed out. Exiting...\033[0m")
+    sys.exit(1)
+
+if __name__ == "__main__":
+    main()
