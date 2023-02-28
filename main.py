@@ -49,7 +49,8 @@ def check_files_exist(site_url, file_name_format, num_images):
         return None
 
     print(
-        f"{Fore.GREEN}All {len(id_list)} image files checked on the server.{Style.RESET_ALL}"
+        f"{Fore.GREEN}Checked all {num_images} image files on the server{Style.RESET_ALL} "
+        f"- Found {len(id_list)}"
     )
     print(" ")
     return id_list
@@ -63,12 +64,15 @@ def download_images(site_url, folder_name, id_list):
     current_dir = os.getcwd()
 
     print(SEPARATOR)
-    print(f"{Fore.BLUE}Downloading images to{Style.RESET_ALL} {current_dir}")
+    print(f"{Fore.BLUE}Downloading images to{Style.RESET_ALL} {current_dir}...")
     print(SEPARATOR)
 
     for image_id in id_list:
         if os.path.exists(image_id):
-            print(f"{Fore.YELLOW}{image_id}{Style.RESET_ALL} already exists, skipping")
+            print(
+                f"{Fore.YELLOW}Image file{Style.RESET_ALL} {image_id}"
+                f"{Fore.YELLOW} already exists. Skipping...{Style.RESET_ALL}"
+            )
             continue
 
         file_url = site_url + image_id
