@@ -23,8 +23,11 @@ def check_files_exist(site_url, file_name_format, num_images):
     """
     Checks if the specified images exist on the server and returns a list of their IDs.
     """
+    print(" ")
     print(SEPARATOR)
-    print(f"{Fore.BLUE}Searching for files...{Style.RESET_ALL}")
+    print(
+        f"{Fore.BLUE}Searching all {num_images} image files on the server.{Style.RESET_ALL}"
+    )
     print(SEPARATOR)
 
     id_list = []
@@ -35,12 +38,20 @@ def check_files_exist(site_url, file_name_format, num_images):
         if response.status_code == requests.codes["OK"]:
             image_id = file_name_format % i
             id_list.append(image_id)
-            print(f"{Fore.GREEN}File found:{Style.RESET_ALL} {image_id}")
+            print(f"{Fore.GREEN}Image file {i} found:{Style.RESET_ALL} {image_id}")
         else:
-            print(f"{Fore.RED}File not found:{Style.RESET_ALL} {file_name_format % i}")
-            return None
+            image_id = file_name_format % i
+            print(
+                f"{Fore.YELLOW}Image file {i} not found on server:{Style.RESET_ALL} {image_id}"
+            )
 
-    print(f"{Fore.GREEN}All files found on server{Style.RESET_ALL} 🚀")
+    if len(id_list) == 0:
+        return None
+
+    print(
+        f"{Fore.GREEN}Checked all {num_images} image files on the server{Style.RESET_ALL} "
+        f"- Found {len(id_list)}"
+    )
     print(" ")
     return id_list
 
@@ -53,12 +64,15 @@ def download_images(site_url, folder_name, id_list):
     current_dir = os.getcwd()
 
     print(SEPARATOR)
-    print(f"{Fore.BLUE}Downloading images to{Style.RESET_ALL} {current_dir}")
+    print(f"{Fore.BLUE}Downloading images to{Style.RESET_ALL} {current_dir}...")
     print(SEPARATOR)
 
     for image_id in id_list:
         if os.path.exists(image_id):
-            print(f"{Fore.YELLOW}{image_id}{Style.RESET_ALL} already exists, skipping")
+            print(
+                f"{Fore.YELLOW}Image file{Style.RESET_ALL} {image_id}"
+                f"{Fore.YELLOW} already exists. Skipping...{Style.RESET_ALL}"
+            )
             continue
 
         file_url = site_url + image_id
@@ -77,13 +91,27 @@ def main():
     """
     try:
         # Getting user inputs
-        site_url = (
-            input(
-                f"{Fore.CYAN}Enter the URL path of the images{Style.RESET_ALL} "
-                f"(default: {DEFAULT_URL_PATH}): "
-            ).strip()
-            or DEFAULT_URL_PATH
-        )
+        while True:
+            site_url = (
+                input(
+                    f"{Fore.CYAN}Enter the URL path of the images{Style.RESET_ALL} "
+                    f"(default: {DEFAULT_URL_PATH}): "
+                ).strip()
+                or DEFAULT_URL_PATH
+            )
+
+            if not site_url.startswith("https://"):
+                print(
+                    f"{Fore.RED}Invalid URL. Please enter a URL that starts "
+                    f"with 'https://' .{Style.RESET_ALL}"
+                )
+            elif not site_url.endswith("/"):
+                print(
+                    f"{Fore.RED}Invalid URL. Please enter a URL that ends "
+                    f"with a forward slash (/).{Style.RESET_ALL}"
+                )
+            else:
+                break
 
         while True:
             try:
