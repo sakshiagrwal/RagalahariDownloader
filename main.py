@@ -9,7 +9,7 @@ import sys
 import requests
 
 # Default values
-DEFAULT_SITE_URL = (
+DEFAULT_URL_PATH = (
     "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
 )
 DEFAULT_NUM_IMAGES = 4
@@ -71,9 +71,9 @@ def main():
         # Getting user inputs
         site_url = (
             input(
-                f"Enter the URL path of the images (default: {DEFAULT_SITE_URL}): "
+                f"Enter the URL path of the images (default: {DEFAULT_URL_PATH}): "
             ).strip()
-            or DEFAULT_SITE_URL
+            or DEFAULT_URL_PATH
         )
         num_images = int(
             input(
@@ -83,7 +83,7 @@ def main():
         )
         file_name_format = (
             input(
-                "Enter the file name format (default: {DEFAULT_FILE_NAME_FORMAT}): "
+                f"Enter the file name format (default: {DEFAULT_FILE_NAME_FORMAT}): "
             ).strip()
             or DEFAULT_FILE_NAME_FORMAT
         )
