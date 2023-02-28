@@ -9,7 +9,7 @@ import sys
 import requests
 
 # Default values
-DEFAULT_SITE_URL = ("https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/")
+DEFAULT_SITE_URL = "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
 DEFAULT_NUM_IMAGES = 4
 DEFAULT_FILE_NAME_FORMAT = "kiara-advani-vvr-interview%d.jpg"
 DEFAULT_FOLDER_NAME = "kiara"
