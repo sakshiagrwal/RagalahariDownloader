@@ -73,8 +73,7 @@ def main():
         # Getting user inputs
         site_url = (
             input(
-                f"{Fore.CYAN}Enter the URL path of the images {Style.RESET_ALL}"
-                f"(default: {DEFAULT_URL_PATH}): "
+                f"{Fore.CYAN}Enter the URL path of the images {Style.RESET_ALL}(default: {DEFAULT_URL_PATH}): "
             ).strip()
             or DEFAULT_URL_PATH
         )
@@ -83,8 +82,7 @@ def main():
             try:
                 num_images = int(
                     input(
-                        f"{Fore.CYAN}How many images do you want to download?{Style.RESET_ALL}"
-                        f"(default: {DEFAULT_NUM_IMAGES}): "
+                        f"{Fore.CYAN}How many images do you want to download?{Style.RESET_ALL} (default: {DEFAULT_NUM_IMAGES}): "
                     ).strip()
                     or DEFAULT_NUM_IMAGES
                 )
@@ -97,8 +95,7 @@ def main():
         while True:
             file_name_format = (
                 input(
-                    f"{Fore.CYAN}Enter the file name format{Style.RESET_ALL} "
-                    f"(default: {DEFAULT_FILE_NAME_FORMAT}): "
+                    f"{Fore.CYAN}Enter the file name format{Style.RESET_ALL} (default: {DEFAULT_FILE_NAME_FORMAT}): "
                 ).strip()
                 or DEFAULT_FILE_NAME_FORMAT
             )
