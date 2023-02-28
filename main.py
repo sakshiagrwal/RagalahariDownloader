@@ -9,7 +9,7 @@ import sys
 import requests
 from colorama import Fore, Style
 
-# Default values
+# Default configuration
 DEFAULT_URL_PATH = (
     "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
 )
@@ -22,7 +22,7 @@ def check_files_exist(site_url, file_name_format, num_images):
     """
     Checks if the specified images exist on the server and returns a list of their IDs.
     """
-    print("Searching for files...")
+    print(f"{Fore.YELLOW}Searching for files...{Style.RESET_ALL}")
 
     id_list = []
     for i in range(1, num_images + 1):
@@ -32,12 +32,12 @@ def check_files_exist(site_url, file_name_format, num_images):
         if response.status_code == requests.codes["OK"]:
             image_id = file_name_format % i
             id_list.append(image_id)
-            print(f"File found: {image_id}")
+            print(f"{Fore.GREEN}File found: {image_id}{Style.RESET_ALL}")
         else:
-            print(f"File not found: {file_name_format % i}")
+            print(f"{Fore.RED}File not found: {file_name_format % i}{Style.RESET_ALL}")
             return None
 
-    print("All files found on server")
+    print(f"{Fore.GREEN}All files found on server{Style.RESET_ALL}")
     return id_list
 
 
@@ -48,11 +48,11 @@ def download_images(site_url, folder_name, id_list):
     os.chdir(folder_name)
     current_dir = os.getcwd()
 
-    print(f"Downloading images to {current_dir}...")
+    print(f"{Fore.YELLOW}Downloading images to {current_dir}...{Style.RESET_ALL}")
 
     for image_id in id_list:
         if os.path.exists(image_id):
-            print(f"{image_id} already exists, skipping...")
+            print(f"{Fore.YELLOW}{image_id} already exists, skipping...{Style.RESET_ALL}")
             continue
 
         file_url = site_url + image_id
@@ -62,7 +62,7 @@ def download_images(site_url, folder_name, id_list):
         with open(image_id, "wb") as file:
             shutil.copyfileobj(response.raw, file)
 
-        print(f"{image_id} - Downloaded successfully!")
+        print(f"{Fore.GREEN}{image_id} - Downloaded successfully!{Style.RESET_ALL}")
 
 
 def main():
@@ -73,7 +73,7 @@ def main():
         # Getting user inputs
         site_url = (
             input(
-                f"{Fore.YELLOW}Enter the URL path of the images {Style.RESET_ALL} (default: {DEFAULT_URL_PATH}): "
+                f"{Fore.YELLOW}Enter the URL path of the images {Style.RESET_ALL}(default: {DEFAULT_URL_PATH}): "
             ).strip()
             or DEFAULT_URL_PATH
         )
@@ -82,7 +82,7 @@ def main():
             try:
                 num_images = int(
                     input(
-                        f"{Fore.YELLOW}How many images do you want to download? {Style.RESET_ALL} (default: {DEFAULT_NUM_IMAGES}): "
+                        f"{Fore.YELLOW}How many images do you want to download?{Style.RESET_ALL} (default: {DEFAULT_NUM_IMAGES}): "
                     ).strip()
                     or DEFAULT_NUM_IMAGES
                 )
@@ -90,12 +90,12 @@ def main():
                     raise ValueError
                 break
             except ValueError:
-                print(Fore.RED + "Invalid input. Please enter a positive integer." + Style.RESET_ALL)
+                print(f"{Fore.RED}Invalid input. Please enter a positive integer.{Style.RESET_ALL}")
 
         while True:
             file_name_format = (
                 input(
-                    f"Enter the file name format (default: {DEFAULT_FILE_NAME_FORMAT}): "
+                    f"{Fore.YELLOW}Enter the file name format{Style.RESET_ALL} (default: {DEFAULT_FILE_NAME_FORMAT}): "
                 ).strip()
                 or DEFAULT_FILE_NAME_FORMAT
             )
@@ -105,13 +105,13 @@ def main():
                     break
                 else:
                     print(
-                        "One or more files not found on server. Please enter a valid file name format."
+                        f"{Fore.RED}One or more files not found on server. Please enter a valid file name{Style.RESET_ALL}"
                     )
             else:
-                print("Invalid file name format. Please include '%d' in the format.")
+                print(f"{Fore.RED}Invalid file name format. Please include '%d' in the format.{Style.RESET_ALL}")
 
         folder_name = (
-            input(f"Enter the folder name (default: {DEFAULT_FOLDER_NAME}): ").strip()
+            input(f"{Fore.YELLOW}Enter the folder name{Style.RESET_ALL} (default: {DEFAULT_FOLDER_NAME}): ").strip()
             or DEFAULT_FOLDER_NAME
         )
 
@@ -119,11 +119,12 @@ def main():
             os.makedirs(folder_name)
 
         download_images(site_url, folder_name, id_list[:num_images])
+        print(f"{Fore.GREEN}Download complete!{Style.RESET_ALL}")
 
     except KeyboardInterrupt:
-        print("\nShutdown requested. Exiting...")
+        print(f"\n{Fore.YELLOW}Shutdown requested. Exiting...{Style.RESET_ALL}")
     except requests.exceptions.Timeout:
-        print("Request timed out. Exiting...")
+        print(f"{Fore.RED}Request timed out. Exiting...{Style.RESET_ALL}")
         sys.exit(1)
 
 
