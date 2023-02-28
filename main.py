@@ -7,6 +7,7 @@ import os.path
 import shutil
 import sys
 import requests
+from colorama import Fore, Style
 
 # Default values
 DEFAULT_URL_PATH = (
@@ -72,7 +73,7 @@ def main():
         # Getting user inputs
         site_url = (
             input(
-                f"Enter the URL path of the images (default: {DEFAULT_URL_PATH}): "
+                f"{Fore.YELLOW}Enter the URL path of the images {Style.RESET_ALL} (default: {DEFAULT_URL_PATH}): "
             ).strip()
             or DEFAULT_URL_PATH
         )
@@ -81,7 +82,7 @@ def main():
             try:
                 num_images = int(
                     input(
-                        f"How many images do you want to download? (default: {DEFAULT_NUM_IMAGES}): "
+                        f"{Fore.YELLOW}How many images do you want to download? {Style.RESET_ALL} (default: {DEFAULT_NUM_IMAGES}): "
                     ).strip()
                     or DEFAULT_NUM_IMAGES
                 )
@@ -89,7 +90,7 @@ def main():
                     raise ValueError
                 break
             except ValueError:
-                print("Invalid input. Please enter a positive integer.")
+                print(Fore.RED + "Invalid input. Please enter a positive integer." + Style.RESET_ALL)
 
         while True:
             file_name_format = (
