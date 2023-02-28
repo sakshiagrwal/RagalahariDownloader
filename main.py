@@ -37,10 +37,13 @@ def check_files_exist(site_url, file_name_format, num_images):
             id_list.append(image_id)
             print(f"{Fore.GREEN}File found:{Style.RESET_ALL} {image_id}")
         else:
-            print(f"{Fore.RED}File not found:{Style.RESET_ALL} {file_name_format % i}")
-            return None
+            image_id = file_name_format % i
+            print(f"{Fore.YELLOW}File not found on server:{Style.RESET_ALL} {image_id}")
 
-    print(f"{Fore.GREEN}All files found on server{Style.RESET_ALL} 🚀")
+    if len(id_list) == 0:
+        return None
+
+    print(f"{Fore.GREEN}All files checked{Style.RESET_ALL} 🚀")
     print(" ")
     return id_list
 
