@@ -1,21 +1,46 @@
 # Ragalahari Downloader
 
-The Ragalahari Downloader is a Python script that can be used to download images from the [Ragalahari website](https://www.ragalahari.com). The script takes a URL as input and automatically downloads all images found on the page.
+This is a simple command-line tool to download images from [Ragalahari](https://www.ragalahari.com) in bulk.
 
 #
+
+### Usage
+
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/sakshiagrwal/RagalahariDownloader.git
 ```
 
+2. Go to the downloaded repository:
+
 ```bash
-pip install html5lib requests beautifulsoup4
+cd RagalahariDownloader
 ```
+
+3. Run the script:
 
 ```bash
 python main.py
 ```
 
-Now provide the URL of the page to download images from.
+4. Follow the prompts to enter the URL path of the images, the number of images to download, the file name format, and the folder name where the images will be saved.
+5. Wait for the download process to complete.
 
-> Example URL `https://www.ragalahari.com/actor/171464/allu-arjun-at-honer-richmont-launch.aspx`
+#
+
+### Requirements
+
+This script requires the requests module to be installed. You can install it using pip
+
+```bash
+pip install requests
+```
+
+#
+
+### Notes
+
+- The default number of images to download is 10, but you can specify a different number.
+- The file name format should include `%d` to indicate where the image numbers go. For example, if the image files are named `image-1.jpg`, `image-2.jpg` etc. the file name format should be `image-%d.jpg`.
+- If a file already exists in the target folder, the script will skip downloading that file and move on to the next file
