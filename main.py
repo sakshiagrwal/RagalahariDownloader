@@ -8,49 +8,49 @@ import shutil
 import sys
 import requests
 
+# Default values
+DEFAULT_URL_PATH = (
+    "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
+)
+DEFAULT_NUM_IMAGES = 4
+DEFAULT_FILE_NAME_FORMAT = "kiara-advani-vvr-interview%d.jpg"
+DEFAULT_FOLDER_NAME = "kiara"
 
-def check_file_exists(
-    site_url: str, file_name_format: str, num_images: int, id_lists: list
-) -> bool:
+
+def check_files_exist(site_url, file_name_format, num_images):
     """
     Checks if the specified images exist on the server and returns a list of their IDs.
     """
-    print("\033[93mSearching for files...\033[0m")
+    print("Searching for files...")
 
-    found_files = True
-
+    id_list = []
     for i in range(1, num_images + 1):
         file_url = site_url + file_name_format % i
         response = requests.head(file_url, timeout=10)
 
         if response.status_code == requests.codes["OK"]:
-            ids = file_name_format % i
-            id_lists.append(ids)
-            print(f"\033[92mFile found:\033[0m {file_name_format % i}")
+            image_id = file_name_format % i
+            id_list.append(image_id)
+            print(f"File found: {image_id}")
         else:
-            print(f"\033[91mFile not found:\033[0m {file_name_format % i}")
-            found_files = False
-            break  # Stop searching if the file doesn't exist
+            print(f"File not found: {file_name_format % i}")
+            return None
 
-    if found_files:
-        print("\033[92mAll files found on server\033[0m")
-    else:
-        print("\033[91mCould not find all files on server\033[0m")
-
-    return found_files
+    print("All files found on server")
+    return id_list
 
 
-def download_images(site_url: str, folder_name: str, id_lists: list) -> None:
+def download_images(site_url, folder_name, id_list):
     """
     Downloads the specified images to the specified folder.
     """
     os.chdir(folder_name)
 
-    print("\033[93mDownloading images...\033[0m")
+    print("Downloading images...")
 
-    for image_id in id_lists:
+    for image_id in id_list:
         if os.path.exists(image_id):
-            print(f"\033[93m{image_id} already exists, skipping...\033[0m")
+            print(f"{image_id} already exists, skipping...")
             continue
 
         file_url = site_url + image_id
@@ -60,56 +60,65 @@ def download_images(site_url: str, folder_name: str, id_lists: list) -> None:
         with open(image_id, "wb") as file:
             shutil.copyfileobj(response.raw, file)
 
-        print(f"\033[92m{image_id} - Downloaded successfully!\033[0m")
+        print(f"{image_id} - Downloaded successfully!")
 
 
-def main() -> None:
+def main():
     """
     Main function to handle user input and download the images.
     """
     try:
         # Getting user inputs
-        site_url = input("\033[94mEnter the URL path of the images: \033[0m")
+        site_url = (
+            input(
+                f"Enter the URL path of the images (default: {DEFAULT_URL_PATH}): "
+            ).strip()
+            or DEFAULT_URL_PATH
+        )
         num_images = int(
             input(
-                "\033[94mHow many images do you want to download? (Default: 10): \033[0m"
-            )
-            or 10
+                f"How many images do you want to download? (default: {DEFAULT_NUM_IMAGES}): "
+            ).strip()
+            or DEFAULT_NUM_IMAGES
         )
-        file_name_format = input(
-            "\033[94mEnter the file name format (e.g. image-%d.jpg): \033[0m"
+        file_name_format = (
+            input(
+                f"Enter the file name format (default: {DEFAULT_FILE_NAME_FORMAT}): "
+            ).strip()
+            or DEFAULT_FILE_NAME_FORMAT
         )
 
         # Re-ask the user until valid file names are entered
         while True:
             if "%d" in file_name_format:
-                id_lists = []
-                if check_file_exists(site_url, file_name_format, num_images, id_lists):
+                id_list = check_files_exist(site_url, file_name_format, num_images)
+                if id_list is not None:
                     break
                 else:
-                    file_name_format = input(
-                        "\033[91mEnter a valid file name format:\033[0m "
-                    )
+                    file_name_format = input("Enter a valid file name format: ").strip()
             else:
                 file_name_format = input(
-                    "\033[91mInvalid file name format. Please include '%d' in the format:\033[0m "
-                )
+                    "Invalid file name format. Please include '%d' in the format: "
+                ).strip()
 
         # Prompt for folder name
-        folder_name = input("\033[94mEnter the folder name: \033[0m")
+        folder_name = (
+            input(f"Enter the folder name (default: {DEFAULT_FOLDER_NAME}): ").strip()
+            or DEFAULT_FOLDER_NAME
+        )
 
         # Create folder if it does not exist
         if not os.path.exists(folder_name):
             os.makedirs(folder_name)
 
         # Download the images
-        download_images(site_url, folder_name, id_lists[:num_images])
+        download_images(site_url, folder_name, id_list[:num_images])
 
     except KeyboardInterrupt:
-        print("\n\033[91mShutdown requested. Exiting...\033[0m")
+        print("\nShutdown requested. Exiting...")
     except requests.exceptions.Timeout:
-        print("\033[91mRequest timed out. Exiting...\033[0m")
-    sys.exit(1)
+        print("Request timed out. Exiting...")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
