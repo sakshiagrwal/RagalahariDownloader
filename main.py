@@ -8,6 +8,12 @@ import shutil
 import sys
 import requests
 
+# Default values
+DEFAULT_SITE_URL = ("https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/")
+DEFAULT_NUM_IMAGES = 4
+DEFAULT_FILE_NAME_FORMAT = "kiara-advani-vvr-interview%d.jpg"
+DEFAULT_FOLDER_NAME = "kiara"
+
 
 def check_files_exist(site_url, file_name_format, num_images):
     """
@@ -63,19 +69,19 @@ def main():
         # Getting user inputs
         site_url = (
             input(
-                "Enter the URL path of the images (default: https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/): "
+                f"Enter the URL path of the images (default: {DEFAULT_SITE_URL}): "
             ).strip()
-            or "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
+            or DEFAULT_SITE_URL
         )
         num_images = int(
-            input("How many images do you want to download? (default: 4): ").strip()
-            or 4
+            input(f"How many images do you want to download? (default: {DEFAULT_NUM_IMAGES}): ").strip()
+            or DEFAULT_NUM_IMAGES
         )
         file_name_format = (
             input(
-                "Enter the file name format (default: kiara-advani-vvr-interview%d.jpg): "
+                "Enter the file name format (default: {DEFAULT_FILE_NAME_FORMAT}): "
             ).strip()
-            or "kiara-advani-vvr-interview%d.jpg"
+            or DEFAULT_FILE_NAME_FORMAT
         )
 
         # Re-ask the user until valid file names are entered
@@ -93,7 +99,7 @@ def main():
 
         # Prompt for folder name
         folder_name = (
-            input("Enter the folder name (default: images/): ").strip() or "images/"
+            input(f"Enter the folder name (default: {DEFAULT_FOLDER_NAME}): ").strip()or DEFAULT_FOLDER_NAME
         )
 
         # Create folder if it does not exist
