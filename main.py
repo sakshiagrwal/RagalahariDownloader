@@ -73,7 +73,7 @@ def main():
         # Getting user inputs
         site_url = (
             input(
-                f"{Fore.CYAN}Enter the URL path of the images {Style.RESET_ALL}"
+                f"{Fore.CYAN}Enter the URL path of the images{Style.RESET_ALL} "
                 f"(default: {DEFAULT_URL_PATH}): "
             ).strip()
             or DEFAULT_URL_PATH
@@ -83,7 +83,7 @@ def main():
             try:
                 num_images = int(
                     input(
-                        f"{Fore.CYAN}How many images do you want to download?{Style.RESET_ALL}"
+                        f"{Fore.CYAN}How many images do you want to download?{Style.RESET_ALL} "
                         f"(default: {DEFAULT_NUM_IMAGES}): "
                     ).strip()
                     or DEFAULT_NUM_IMAGES
@@ -104,22 +104,26 @@ def main():
                 ).strip()
                 or DEFAULT_FILE_NAME_FORMAT
             )
-            if "%d" in file_name_format:
+
+            if "%d" not in file_name_format:
+                print(
+                    f"{Fore.RED}Invalid file name format. "
+                    f"Please include '%d' in the format.{Style.RESET_ALL}"
+                )
+            else:
                 id_list = check_files_exist(site_url, file_name_format, num_images)
                 if id_list is not None:
                     break
                 else:
                     print(
-                        f"{Fore.RED}One or more files not found on server. Please enter a valid file name{Style.RESET_ALL}"
+                        f"{Fore.RED}One or more files not found on server. "
+                        f"Please enter a valid file name.{Style.RESET_ALL}"
                     )
-            else:
-                print(
-                    f"{Fore.RED}Invalid file name format. Please include '%d' in the format.{Style.RESET_ALL}"
-                )
 
         folder_name = (
             input(
-                f"{Fore.CYAN}Enter the folder name{Style.RESET_ALL} (default: {DEFAULT_FOLDER_NAME}): "
+                f"{Fore.CYAN}Enter the folder name{Style.RESET_ALL} "
+                f"(default: {DEFAULT_FOLDER_NAME}): "
             ).strip()
             or DEFAULT_FOLDER_NAME
         )
