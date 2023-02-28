@@ -34,7 +34,7 @@ python main.py
 This script requires the requests module to be installed. You can install it using pip
 
 ```bash
-pip install requests
+pip install requests colorama
 ```
 
 #
