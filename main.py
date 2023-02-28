@@ -22,7 +22,7 @@ def check_files_exist(site_url, file_name_format, num_images):
     """
     Checks if the specified images exist on the server and returns a list of their IDs.
     """
-    print(f"{Fore.YELLOW}Searching for files...{Style.RESET_ALL}")
+    print(f"{Fore.BLUE}Searching for files...{Style.RESET_ALL}")
 
     id_list = []
     for i in range(1, num_images + 1):
@@ -48,7 +48,7 @@ def download_images(site_url, folder_name, id_list):
     os.chdir(folder_name)
     current_dir = os.getcwd()
 
-    print(f"{Fore.YELLOW}Downloading images to {current_dir}...{Style.RESET_ALL}")
+    print(f"{Fore.BLUE}Downloading images to {current_dir}...{Style.RESET_ALL}")
 
     for image_id in id_list:
         if os.path.exists(image_id):
@@ -73,7 +73,7 @@ def main():
         # Getting user inputs
         site_url = (
             input(
-                f"{Fore.YELLOW}Enter the URL path of the images {Style.RESET_ALL}(default: {DEFAULT_URL_PATH}): "
+                f"{Fore.CYAN}Enter the URL path of the images {Style.RESET_ALL}(default: {DEFAULT_URL_PATH}): "
             ).strip()
             or DEFAULT_URL_PATH
         )
@@ -82,7 +82,7 @@ def main():
             try:
                 num_images = int(
                     input(
-                        f"{Fore.YELLOW}How many images do you want to download?{Style.RESET_ALL} (default: {DEFAULT_NUM_IMAGES}): "
+                        f"{Fore.CYAN}How many images do you want to download?{Style.RESET_ALL} (default: {DEFAULT_NUM_IMAGES}): "
                     ).strip()
                     or DEFAULT_NUM_IMAGES
                 )
@@ -95,7 +95,7 @@ def main():
         while True:
             file_name_format = (
                 input(
-                    f"{Fore.YELLOW}Enter the file name format{Style.RESET_ALL} (default: {DEFAULT_FILE_NAME_FORMAT}): "
+                    f"{Fore.CYAN}Enter the file name format{Style.RESET_ALL} (default: {DEFAULT_FILE_NAME_FORMAT}): "
                 ).strip()
                 or DEFAULT_FILE_NAME_FORMAT
             )
@@ -111,7 +111,7 @@ def main():
                 print(f"{Fore.RED}Invalid file name format. Please include '%d' in the format.{Style.RESET_ALL}")
 
         folder_name = (
-            input(f"{Fore.YELLOW}Enter the folder name{Style.RESET_ALL} (default: {DEFAULT_FOLDER_NAME}): ").strip()
+            input(f"{Fore.CYAN}Enter the folder name{Style.RESET_ALL} (default: {DEFAULT_FOLDER_NAME}): ").strip()
             or DEFAULT_FOLDER_NAME
         )
 
