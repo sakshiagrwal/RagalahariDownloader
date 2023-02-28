@@ -9,7 +9,9 @@ import sys
 import requests
 
 # Default values
-DEFAULT_SITE_URL = "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
+DEFAULT_SITE_URL = (
+    "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
+)
 DEFAULT_NUM_IMAGES = 4
 DEFAULT_FILE_NAME_FORMAT = "kiara-advani-vvr-interview%d.jpg"
 DEFAULT_FOLDER_NAME = "kiara"
@@ -74,7 +76,9 @@ def main():
             or DEFAULT_SITE_URL
         )
         num_images = int(
-            input(f"How many images do you want to download? (default: {DEFAULT_NUM_IMAGES}): ").strip()
+            input(
+                f"How many images do you want to download? (default: {DEFAULT_NUM_IMAGES}): "
+            ).strip()
             or DEFAULT_NUM_IMAGES
         )
         file_name_format = (
@@ -99,7 +103,8 @@ def main():
 
         # Prompt for folder name
         folder_name = (
-            input(f"Enter the folder name (default: {DEFAULT_FOLDER_NAME}): ").strip()or DEFAULT_FOLDER_NAME
+            input(f"Enter the folder name (default: {DEFAULT_FOLDER_NAME}): ").strip()
+            or DEFAULT_FOLDER_NAME
         )
 
         # Create folder if it does not exist
