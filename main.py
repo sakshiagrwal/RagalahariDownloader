@@ -45,8 +45,9 @@ def download_images(site_url, folder_name, id_list):
     Downloads the specified images to the specified folder.
     """
     os.chdir(folder_name)
+    current_dir = os.getcwd()
 
-    print("Downloading images...")
+    print(f"Downloading images to {current_dir}...")
 
     for image_id in id_list:
         if os.path.exists(image_id):
@@ -75,43 +76,47 @@ def main():
             ).strip()
             or DEFAULT_URL_PATH
         )
-        num_images = int(
-            input(
-                f"How many images do you want to download? (default: {DEFAULT_NUM_IMAGES}): "
-            ).strip()
-            or DEFAULT_NUM_IMAGES
-        )
-        file_name_format = (
-            input(
-                f"Enter the file name format (default: {DEFAULT_FILE_NAME_FORMAT}): "
-            ).strip()
-            or DEFAULT_FILE_NAME_FORMAT
-        )
 
-        # Re-ask the user until valid file names are entered
         while True:
+            try:
+                num_images = int(
+                    input(
+                        f"How many images do you want to download? (default: {DEFAULT_NUM_IMAGES}): "
+                    ).strip()
+                    or DEFAULT_NUM_IMAGES
+                )
+                if num_images <= 0:
+                    raise ValueError
+                break
+            except ValueError:
+                print("Invalid input. Please enter a positive integer.")
+
+        while True:
+            file_name_format = (
+                input(
+                    f"Enter the file name format (default: {DEFAULT_FILE_NAME_FORMAT}): "
+                ).strip()
+                or DEFAULT_FILE_NAME_FORMAT
+            )
             if "%d" in file_name_format:
                 id_list = check_files_exist(site_url, file_name_format, num_images)
                 if id_list is not None:
                     break
                 else:
-                    file_name_format = input("Enter a valid file name format: ").strip()
+                    print(
+                        "One or more files not found on server. Please enter a valid file name format."
+                    )
             else:
-                file_name_format = input(
-                    "Invalid file name format. Please include '%d' in the format: "
-                ).strip()
+                print("Invalid file name format. Please include '%d' in the format.")
 
-        # Prompt for folder name
         folder_name = (
             input(f"Enter the folder name (default: {DEFAULT_FOLDER_NAME}): ").strip()
             or DEFAULT_FOLDER_NAME
         )
 
-        # Create folder if it does not exist
         if not os.path.exists(folder_name):
             os.makedirs(folder_name)
 
-        # Download the images
         download_images(site_url, folder_name, id_list[:num_images])
 
     except KeyboardInterrupt:
