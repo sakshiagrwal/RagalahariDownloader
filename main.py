@@ -73,7 +73,8 @@ def main():
         # Getting user inputs
         site_url = (
             input(
-                f"{Fore.CYAN}Enter the URL path of the images {Style.RESET_ALL}(default: {DEFAULT_URL_PATH}): "
+                f"{Fore.CYAN}Enter the URL path of the images {Style.RESET_ALL}"
+                f"(default: {DEFAULT_URL_PATH}): "
             ).strip()
             or DEFAULT_URL_PATH
         )
@@ -82,7 +83,8 @@ def main():
             try:
                 num_images = int(
                     input(
-                        f"{Fore.CYAN}How many images do you want to download?{Style.RESET_ALL} (default: {DEFAULT_NUM_IMAGES}): "
+                        f"{Fore.CYAN}How many images do you want to download?{Style.RESET_ALL}"
+                        f"(default: {DEFAULT_NUM_IMAGES}): "
                     ).strip()
                     or DEFAULT_NUM_IMAGES
                 )
@@ -90,12 +92,15 @@ def main():
                     raise ValueError
                 break
             except ValueError:
-                print(f"{Fore.RED}Invalid input. Please enter a positive integer.{Style.RESET_ALL}")
+                print(
+                    f"{Fore.RED}Invalid input. Please enter a positive integer.{Style.RESET_ALL}"
+                )
 
         while True:
             file_name_format = (
                 input(
-                    f"{Fore.CYAN}Enter the file name format{Style.RESET_ALL} (default: {DEFAULT_FILE_NAME_FORMAT}): "
+                    f"{Fore.CYAN}Enter the file name format{Style.RESET_ALL} "
+                    f"(default: {DEFAULT_FILE_NAME_FORMAT}): "
                 ).strip()
                 or DEFAULT_FILE_NAME_FORMAT
             )
@@ -108,10 +113,14 @@ def main():
                         f"{Fore.RED}One or more files not found on server. Please enter a valid file name{Style.RESET_ALL}"
                     )
             else:
-                print(f"{Fore.RED}Invalid file name format. Please include '%d' in the format.{Style.RESET_ALL}")
+                print(
+                    f"{Fore.RED}Invalid file name format. Please include '%d' in the format.{Style.RESET_ALL}"
+                )
 
         folder_name = (
-            input(f"{Fore.CYAN}Enter the folder name{Style.RESET_ALL} (default: {DEFAULT_FOLDER_NAME}): ").strip()
+            input(
+                f"{Fore.CYAN}Enter the folder name{Style.RESET_ALL} (default: {DEFAULT_FOLDER_NAME}): "
+            ).strip()
             or DEFAULT_FOLDER_NAME
         )
 
