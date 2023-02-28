@@ -61,9 +61,15 @@ def main():
     """
     try:
         # Getting user inputs
-        site_url = input("Enter the URL path of the images: ").strip()
+        site_url = (
+            input(
+                "Enter the URL path of the images (default: http://localhost/images/): "
+            ).strip()
+            or "http://localhost/images/"
+        )
         num_images = int(
-            input("How many images do you want to download? (Default: 10): ") or 10
+            input("How many images do you want to download? (default: 10): ").strip()
+            or 10
         )
         file_name_format = input(
             "Enter the file name format (e.g. image-%d.jpg): "
@@ -83,7 +89,9 @@ def main():
                 ).strip()
 
         # Prompt for folder name
-        folder_name = input("Enter the folder name: ").strip()
+        folder_name = (
+            input("Enter the folder name (default: images/): ").strip() or "images/"
+        )
 
         # Create folder if it does not exist
         if not os.path.exists(folder_name):
