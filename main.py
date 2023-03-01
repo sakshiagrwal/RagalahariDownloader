@@ -9,13 +9,10 @@ import sys
 import requests
 from colorama import Fore, Style
 
-# Default configuration
-DEFAULT_URL_PATH = (
-    "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
-)
-DEFAULT_NUM_IMAGES = 4
-DEFAULT_FILE_NAME_FORMAT = "kiara-advani-vvr-interview%d.jpg"
-DEFAULT_FOLDER_NAME = "kiara"
+DEFAULT_URL_PATH = "https://example.com/images/"
+DEFAULT_NUM_IMAGES = 10
+DEFAULT_FILE_NAME_FORMAT = "image-%d.jpg"
+DEFAULT_FOLDER_NAME = "images"
 SEPARATOR = "-" * 70
 
 
@@ -90,7 +87,6 @@ def main():
     Main function to handle user input and download the images.
     """
     try:
-        # Getting user inputs
         while True:
             site_url = (
                 input(
