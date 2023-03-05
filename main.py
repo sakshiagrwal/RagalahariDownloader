@@ -3,13 +3,13 @@ import requests
 from urllib.parse import urlparse
 
 full_url = input("Enter the full URL of the first image: ")
+num_images = int(input("Enter the number of images to download: "))
 
 parsed_url = urlparse(full_url)
 site_url = f"{parsed_url.scheme}://{parsed_url.netloc}{os.path.dirname(parsed_url.path)}/"
 folder_name = os.path.splitext(os.path.basename(parsed_url.path))[0]
 file_name = os.path.splitext(os.path.basename(parsed_url.path))[0]
 
-num_images = 4
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 
