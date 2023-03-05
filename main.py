@@ -3,12 +3,11 @@ import re
 from urllib.parse import urlparse
 import requests
 
-# get user input for URL and number of images to download
-full_url = input("Enter the full URL of the first image (leave blank to use default): ")
-if not full_url:
-    full_url = "https://starzone.ragalahari.com/feb2020/hd/samantha-jaanu-success/samantha-jaanu-success6.jpg"  # set a default value for testing
-    print(f"Using default URL: {full_url}")
+# set a default URL for testing
+DEFAULT_URL = "https://starzone.ragalahari.com/feb2020/hd/samantha-jaanu-success/samantha-jaanu-success6.jpg"
 
+# get user input for URL and number of images to download
+full_url = input(f"Enter the full URL of the first image (default: {DEFAULT_URL}): ") or DEFAULT_URL
 num_images = int(input("Enter the number of images to download: "))
 
 # parse the URL to get the site URL, folder name, and file name format
