@@ -20,6 +20,7 @@ file_name = os.path.splitext(os.path.basename(full_url))[0].rstrip("1234567890")
 # create the folder if it doesn't exist
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
+    print(f"Folder '{folder_name}' created at '{os.path.abspath(folder_name)}'")
 
 # loop through the range of image numbers
 for i in range(1, num_images + 1):
