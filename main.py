@@ -17,17 +17,17 @@ site_url = f"{parsed_url.scheme}://{parsed_url.netloc}{os.path.dirname(parsed_ur
 folder_name = re.sub(r'\d*$', '', os.path.splitext(os.path.basename(parsed_url.path))[0])
 file_name = os.path.splitext(os.path.basename(full_url))[0].rstrip("1234567890")
 
-# create the folder if it doesn't exist
-if not os.path.exists(folder_name):
-    os.makedirs(folder_name)
-    print(f"Folder '{folder_name}' created at '{os.path.abspath(folder_name)}'")
-
 # loop through the range of image numbers
 for i in range(1, num_images + 1):
     # create the file name for the current image
     file_name_format = file_name + str(i) + os.path.splitext(parsed_url.path)[1]
     # create the file path for the current image
     file_path = os.path.join(folder_name, file_name_format)
+
+    # create the folder if it doesn't exist
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+        print(f"Folder '{folder_name}' created at '{os.path.abspath(folder_name)}'")
 
     # check if the file already exists, and skip if it does
     if os.path.exists(file_path):
