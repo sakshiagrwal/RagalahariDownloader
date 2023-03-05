@@ -10,7 +10,7 @@ num_images = int(input("Enter the number of images to download: "))
 parsed_url = urlparse(full_url)
 site_url = f"{parsed_url.scheme}://{parsed_url.netloc}{os.path.dirname(parsed_url.path)}/"
 folder_name = os.path.splitext(os.path.basename(parsed_url.path))[0]
-file_name = os.path.splitext(os.path.basename(full_url))[0].rstrip('1234567890')
+file_name = os.path.splitext(os.path.basename(full_url))[0].rstrip("1234567890")
 
 # create the folder if it doesn't exist
 if not os.path.exists(folder_name):
@@ -22,17 +22,17 @@ for i in range(1, num_images + 1):
     file_name_format = file_name + str(i) + os.path.splitext(parsed_url.path)[1]
     # create the file path for the current image
     file_path = os.path.join(folder_name, file_name_format)
-    
+
     # check if the file already exists, and skip if it does
     if os.path.exists(file_path):
         print(f"{file_name_format} already exists in {folder_name}")
         continue
-    
+
     # create the URL for the current image
     file_url = site_url + file_name_format
     # download the image from the URL with a 10-second timeout
     response = requests.get(file_url, timeout=10)
-    
+
     # check if the image was downloaded successfully, and save it to the file path if it was
     if response.status_code == 200:
         with open(file_path, "wb") as file:
