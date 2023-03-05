@@ -1,6 +1,6 @@
 import os
-import requests
 from urllib.parse import urlparse
+import requests
 
 # get user input for URL and number of images to download
 full_url = input("Enter the full URL of the first image: ")
