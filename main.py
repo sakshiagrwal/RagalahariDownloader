@@ -1,11 +1,15 @@
-import requests
 import os
+import requests
+from urllib.parse import urlparse
 
-site_url = input("Enter the site URL: ")
-folder_name = input("Enter the folder name: ")
-num_images = int(input("Enter the number of images: "))
-file_name_format = input("Enter the file name format: ")
+full_url = input("Enter the full URL of the first image: ")
 
+parsed_url = urlparse(full_url)
+site_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
+folder_name = os.path.splitext(os.path.basename(parsed_url.path))[0]
+file_name_format = os.path.splitext(parsed_url.path)[0] + "%d" + os.path.splitext(parsed_url.path)[1]
+
+num_images = 4
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
 
