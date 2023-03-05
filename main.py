@@ -1,4 +1,5 @@
 import os
+import re
 from urllib.parse import urlparse
 import requests
 
@@ -9,7 +10,7 @@ num_images = int(input("Enter the number of images to download: "))
 # parse the URL to get the site URL, folder name, and file name format
 parsed_url = urlparse(full_url)
 site_url = f"{parsed_url.scheme}://{parsed_url.netloc}{os.path.dirname(parsed_url.path)}/"
-folder_name = os.path.splitext(os.path.basename(parsed_url.path))[0]
+folder_name = re.sub(r'\d*$', '', os.path.splitext(os.path.basename(parsed_url.path))[0])
 file_name = os.path.splitext(os.path.basename(full_url))[0].rstrip("1234567890")
 
 # create the folder if it doesn't exist
