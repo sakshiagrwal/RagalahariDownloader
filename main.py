@@ -4,9 +4,10 @@ from urllib.parse import urlparse
 import requests
 
 # get user input for URL and number of images to download
-full_url = input("Enter the full URL of the first image: ")
+full_url = input("Enter the full URL of the first image (leave blank to use default): ")
 if not full_url:
     full_url = "https://example.com/images/image-1.jpg"  # set a default value for testing
+    print(f"Using default URL: {full_url}")
 
 num_images = int(input("Enter the number of images to download: "))
 
