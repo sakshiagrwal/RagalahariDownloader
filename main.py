@@ -6,7 +6,7 @@ import requests
 # get user input for URL and number of images to download
 full_url = input("Enter the full URL of the first image (leave blank to use default): ")
 if not full_url:
-    full_url = "https://example.com/images/image-1.jpg"  # set a default value for testing
+    full_url = "https://starzone.ragalahari.com/feb2020/hd/samantha-jaanu-success/samantha-jaanu-success6.jpg"  # set a default value for testing
     print(f"Using default URL: {full_url}")
 
 num_images = int(input("Enter the number of images to download: "))
