@@ -1,10 +1,10 @@
 import requests
 import os
 
-site_url = "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
-folder_name = "kiara"
-num_images = 4
-file_name_format = "kiara-advani-vvr-interview%d.jpg"
+site_url = input("Enter the site URL: ")
+folder_name = input("Enter the folder name: ")
+num_images = int(input("Enter the number of images: "))
+file_name_format = input("Enter the file name format: ")
 
 if not os.path.exists(folder_name):
     os.makedirs(folder_name)
