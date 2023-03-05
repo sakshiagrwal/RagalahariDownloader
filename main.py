@@ -5,6 +5,9 @@ import requests
 
 # get user input for URL and number of images to download
 full_url = input("Enter the full URL of the first image: ")
+if not full_url:
+    full_url = "https://example.com/images/image-1.jpg"  # set a default value for testing
+
 num_images = int(input("Enter the number of images to download: "))
 
 # parse the URL to get the site URL, folder name, and file name format
