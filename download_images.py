@@ -5,6 +5,14 @@ def download_images(site_url, folder_name, file_name, num_images, parsed_url):
     """
     Download images from a given URL
     """
+    # check if the folder exists and has any files before downloading images
+    folder_path = os.path.abspath(folder_name)
+    if os.path.exists(folder_path) and os.listdir(folder_path):
+        print(f"Skipping folder creation as '{folder_name}' already exists and has files.")
+    else:
+        os.makedirs(folder_name)
+        print(f"Folder '{folder_name}' created at '{folder_path}'")
+
     # loop through the images and download them
     for index, _ in enumerate(range(1, num_images + 1), start=1):
         # create the file name for the current image
