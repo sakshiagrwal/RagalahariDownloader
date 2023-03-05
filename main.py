@@ -1,7 +1,3 @@
-"""
-Ragalahari Downloader
-"""
-
 import os
 import os.path
 import shutil
@@ -17,9 +13,6 @@ SEPARATOR = "-" * 70
 
 
 def check_files_exist(site_url, file_name_format, num_images):
-    """
-    Checks if the specified images exist on the server and returns a list of their IDs.
-    """
     print(" ")
     print(SEPARATOR)
     print(
@@ -54,9 +47,6 @@ def check_files_exist(site_url, file_name_format, num_images):
 
 
 def download_images(site_url, folder_name, id_list):
-    """
-    Downloads the specified images to the specified folder.
-    """
     os.chdir(folder_name)
     current_dir = os.getcwd()
 
@@ -83,9 +73,6 @@ def download_images(site_url, folder_name, id_list):
 
 
 def main():
-    """
-    Main function to handle user input and download the images.
-    """
     try:
         while True:
             site_url = (
