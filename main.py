@@ -30,8 +30,8 @@ for i in range(1, num_images + 1):
     
     # create the URL for the current image
     file_url = site_url + file_name_format
-    # download the image from the URL
-    response = requests.get(file_url)
+    # download the image from the URL with a 10-second timeout
+    response = requests.get(file_url, timeout=10)
     
     # check if the image was downloaded successfully, and save it to the file path if it was
     if response.status_code == 200:
