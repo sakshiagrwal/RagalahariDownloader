@@ -1,181 +1,21 @@
-"""
-Ragalahari Downloader
-"""
-
-import os
-import os.path
-import shutil
-import sys
 import requests
-from colorama import Fore, Style
+import os
 
-DEFAULT_URL_PATH = "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
-DEFAULT_NUM_IMAGES = 4
-DEFAULT_FILE_NAME_FORMAT = "kiara-advani-vvr-interview%d.jpg"
-DEFAULT_FOLDER_NAME = "kiara"
-SEPARATOR = "-" * 70
+site_url = "https://starzone.ragalahari.com/jan2019/posters/kiara-advani-vvr-interview/"
+folder_name = "kiara"
+num_images = 4
+file_name_format = "kiara-advani-vvr-interview%d.jpg"
 
+if not os.path.exists(folder_name):
+    os.makedirs(folder_name)
 
-def check_files_exist(site_url, file_name_format, num_images):
-    """
-    Checks if the specified images exist on the server and returns a list of their IDs.
-    """
-    print(" ")
-    print(SEPARATOR)
-    print(
-        f"{Fore.BLUE}Searching all {num_images} image files on the server.{Style.RESET_ALL}"
-    )
-    print(SEPARATOR)
-
-    id_list = []
-    for i in range(1, num_images + 1):
-        file_url = site_url + file_name_format % i
-        response = requests.head(file_url, timeout=10)
-
-        if response.status_code == requests.codes["OK"]:
-            image_id = file_name_format % i
-            id_list.append(image_id)
-            print(f"{Fore.GREEN}Image file {i} found:{Style.RESET_ALL} {image_id}")
-        else:
-            image_id = file_name_format % i
-            print(
-                f"{Fore.YELLOW}Image file {i} not found on server:{Style.RESET_ALL} {image_id}"
-            )
-
-    if len(id_list) == 0:
-        return None
-
-    print(
-        f"{Fore.GREEN}Checked all {num_images} image files on the server{Style.RESET_ALL} "
-        f"- Found {len(id_list)}"
-    )
-    print(" ")
-    return id_list
-
-
-def download_images(site_url, folder_name, id_list):
-    """
-    Downloads the specified images to the specified folder.
-    """
-    os.chdir(folder_name)
-    current_dir = os.getcwd()
-
-    print(SEPARATOR)
-    print(f"{Fore.BLUE}Downloading images to{Style.RESET_ALL} {current_dir}...")
-    print(SEPARATOR)
-
-    for image_id in id_list:
-        if os.path.exists(image_id):
-            print(
-                f"{Fore.YELLOW}Image file{Style.RESET_ALL} {image_id}"
-                f"{Fore.YELLOW} already exists. Skipping...{Style.RESET_ALL}"
-            )
-            continue
-
-        file_url = site_url + image_id
-        response = requests.get(file_url, stream=True, timeout=10)
-        response.raw.decode_content = True
-
-        with open(image_id, "wb") as file:
-            shutil.copyfileobj(response.raw, file)
-
-        print(f"{Fore.GREEN}{image_id}{Style.RESET_ALL} - Downloaded successfully!")
-
-
-def main():
-    """
-    Main function to handle user input and download the images.
-    """
-    try:
-        while True:
-            site_url = (
-                input(
-                    f"{Fore.CYAN}Enter the URL path of the images{Style.RESET_ALL} "
-                    f"(default: {DEFAULT_URL_PATH}): "
-                ).strip()
-                or DEFAULT_URL_PATH
-            )
-
-            if not site_url.startswith("https://"):
-                print(
-                    f"{Fore.RED}Invalid URL. Please enter a URL that starts "
-                    f"with 'https://' .{Style.RESET_ALL}"
-                )
-            elif not site_url.endswith("/"):
-                print(
-                    f"{Fore.RED}Invalid URL. Please enter a URL that ends "
-                    f"with a forward slash (/).{Style.RESET_ALL}"
-                )
-            else:
-                break
-
-        while True:
-            try:
-                num_images = int(
-                    input(
-                        f"{Fore.CYAN}How many images do you want to download?{Style.RESET_ALL} "
-                        f"(default: {DEFAULT_NUM_IMAGES}): "
-                    ).strip()
-                    or DEFAULT_NUM_IMAGES
-                )
-                if num_images <= 0:
-                    raise ValueError
-                break
-            except ValueError:
-                print(
-                    f"{Fore.RED}Invalid input. Please enter a positive integer.{Style.RESET_ALL}"
-                )
-
-        while True:
-            file_name_format = (
-                input(
-                    f"{Fore.CYAN}Enter the file name format{Style.RESET_ALL} "
-                    f"(default: {DEFAULT_FILE_NAME_FORMAT}): "
-                ).strip()
-                or DEFAULT_FILE_NAME_FORMAT
-            )
-
-            if "%d" not in file_name_format:
-                print(
-                    f"{Fore.RED}Invalid file name format. "
-                    f"Please include '%d' in the format.{Style.RESET_ALL}"
-                )
-            else:
-                id_list = check_files_exist(site_url, file_name_format, num_images)
-                if id_list is not None:
-                    break
-                else:
-                    print(
-                        f"{Fore.RED}One or more files not found on server. "
-                        f"Please enter a valid file name.{Style.RESET_ALL}"
-                    )
-
-        print(SEPARATOR)
-        folder_name = (
-            input(
-                f"{Fore.CYAN}Enter the folder name{Style.RESET_ALL} "
-                f"(default: {DEFAULT_FOLDER_NAME}): "
-            ).strip()
-            or DEFAULT_FOLDER_NAME
-        )
-        print(SEPARATOR)
-        print(" ")
-
-        if not os.path.exists(folder_name):
-            os.makedirs(folder_name)
-
-        download_images(site_url, folder_name, id_list[:num_images])
-        print(" ")
-        print(SEPARATOR)
-        print(f"{Fore.GREEN}Download complete! 🎉{Style.RESET_ALL}")
-        print(SEPARATOR)
-
-    except KeyboardInterrupt:
-        print(f"\n{Fore.YELLOW}Shutdown requested. Exiting...{Style.RESET_ALL}")
-    except requests.exceptions.Timeout:
-        print(f"{Fore.RED}Request timed out. Exiting...{Style.RESET_ALL}")
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
+for i in range(1, num_images + 1):
+    file_url = site_url + file_name_format % i
+    response = requests.get(file_url)
+    if response.status_code == 200:
+        file_name = file_name_format % i
+        with open(os.path.join(folder_name, file_name), "wb") as file:
+            file.write(response.content)
+            print(f"{file_name} - Downloaded successfully!")
+    else:
+        print(f"{file_name_format % i} not found on server")
