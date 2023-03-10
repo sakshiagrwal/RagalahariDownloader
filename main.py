@@ -3,11 +3,11 @@ import re
 from urllib.parse import urlparse
 import requests
 
-DEFAULT_URL = "https://starzone.ragalahari.com/sep2020/hd/aditi-rao-haidari-sep2020/aditi-rao-haidari-sep20201.jpg"
+DEFAULT_URL = "https://starzone.ragalahari.com/feb2022/hd/aakanksha-singh-clap-press-meet/aakanksha-singh-clap-press-meet1.jpg"
 DEFAULT_NUM = 2
 SEPARATOR = "━" * 60
 
-full_url = input("Enter the full URL of the first image (leave blank to test) ") or DEFAULT_URL
+full_url = input("Enter the full URL of the first image (Press enter for default): ") or DEFAULT_URL
 num_images = int(input("How many images would you like to download? (Press enter for default): ") or DEFAULT_NUM)
 print(SEPARATOR)
 
@@ -20,6 +20,12 @@ NUM_DOWNLOADED = 0
 for i in range(1, num_images + 1):
     file_name_format = file_name + str(i) + os.path.splitext(parsed_url.path)[1]
     file_path = os.path.join(folder_name, file_name_format)
+
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+        print("\033[92m" + f"Folder '{folder_name}' created" + "\033[0m")
+        print()
+
     if os.path.exists(file_path):
         print("\033[33m" + f"{file_name_format} - Already exists" + "\033[0m")
         continue
@@ -29,7 +35,7 @@ for i in range(1, num_images + 1):
         response = requests.get(file_url, timeout=10)
         response.raise_for_status()
     except requests.exceptions.RequestException as e:
-        print(f"\033[91m{file_name_format} - {str(e)}\033[0m")
+        print(f"\033[91m{file_name_format} - Not Found for url: {file_url}\033[0m")
         continue
 
     if not os.path.exists(folder_name):
