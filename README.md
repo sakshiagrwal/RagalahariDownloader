@@ -1,6 +1,6 @@
 # Ragalahari Downloader
 
-This is a Python script that downloads a sequence of images from [Ragalahari](https://www.ragalahari.com/actress/starzonesearch.aspx) website. 
+This is a Python script that downloads a sequence of images from [Ragalahari](https://www.ragalahari.com/actress/starzonesearch.aspx) website.
 
 ## Getting Started
 
