@@ -69,4 +69,4 @@ elif NUM_DOWNLOADED == num_images:
     print("\033[94m" + f"All {num_images} images downloaded at '{os.path.abspath(folder_name)}' - Total size: {TOTAL_SIZE/1024/1024:.2f} MB" + "\033[0m")
 else:
     print()
-    print("\033[94m" + f"Downloaded {NUM_DOWNLOADED} out of {num_images} images at '{os.path.abspath(folder_name)}'" + "\033[0m")
+    print("\033[94m" + f"Downloaded {NUM_DOWNLOADED} out of {num_images} images at '{os.path.abspath(folder_name)}' - Total size: {TOTAL_SIZE/1024/1024:.2f} MB" + "\033[0m")
