@@ -43,9 +43,6 @@ for i in range(1, num_images + 1):
         print(f"\033[91m{file_name_format} - Not Found for url: {file_url}\033[0m")
         continue
 
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
-
     downloaded_size = 0
     with open(file_path, "wb") as file:
         for chunk in response.iter_content(chunk_size=1024):
